@@ -1,0 +1,25 @@
+{%- macro render(c, prefix=None) %}
+{%-   set prefix = prefix or [] %}
+{%-   for conf, val in c | dictsort %}
+{%-     if val is not mapping %}
+{%-       if val is string %}
+{{ conf }} = "{{ val }}"
+{%-       elif val in [true, false] %}
+{{ conf }} = {{ val | lower }}
+{%-       else %}
+{{ conf }} = {{ val }}
+{%-       endif %}
+{%-     endif %}
+{%-   endfor %}
+{%-   for conf, val in c | dictsort %}
+{%-     if val is mapping %}
+{%-       do prefix.append(conf) %}
+
+[{{ prefix | join(".") }}]
+{{- render(val, prefix) }}
+{%-       do prefix.pop() %}
+{%-     endif %}
+{%-   endfor %}
+{%- endmacro -%}
+
+{{ render(archivebox.sonic.config) }}

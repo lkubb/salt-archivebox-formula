@@ -1,0 +1,71 @@
+{#- -*- coding: utf-8 -*- #}
+{#- vim: ft=jinja #}
+
+{#-
+    Convenience: Make relative paths absolute.
+-#}
+
+{%- set base_path = mapdata.lookup.paths.base %}
+{%- set data_path = mapdata.lookup.paths.data %}
+{%- if not data_path.startswith("/") %}
+  {%- set data_path = base_path | path_join(data_path) %}
+{%- endif %}
+{%- for path, val in mapdata.lookup.paths.items() %}
+  {%- if val is string and not val.startswith("/") %}
+    {%- if path.startswith("data_") %}
+      {%- do mapdata.lookup.paths.update({path: data_path | path_join(val)}) %}
+    {%- else %}
+      {%- do mapdata.lookup.paths.update({path: base_path | path_join(val)}) %}
+    {%- endif %}
+  {%- endif %}
+{%- endfor %}
+
+{%- if not mapdata.lookup.user.home %}
+  {%- do mapdata.lookup.user.update({"home": base_path}) %}
+{%- endif %}
+
+
+{#-
+    Convenience: Make sure the settings are set correctly if undefined.
+-#}
+
+{%- macro set_defaults(target, conf, val) %}
+  {%- if target | traverse(conf) is none %}
+    {%- set target_path = conf.split(":")[:-1] | join(":") %}
+    {%- set target_key = conf.split(":")[-1] %}
+    {%- do target | update_dict_key_value(target_path, {target_key: val}) %}
+  {%- endif %}
+{%- endmacro %}
+
+{%- if mapdata.sonic.enable %}
+  {%- for conf, val in [
+    ("config:search_backend:search_backend_engine", "sonic"),
+  ] %}
+    {{- set_defaults(mapdata, conf, val) -}}
+  {%- endfor %}
+{%- endif %}
+
+
+{#-
+    Automatically generate secrets if they were not specified.
+-#}
+
+{%- for key, secret in [
+      ("config:search_backend", "search_backend_password"),
+      ("config:server", "secret_key"),
+      ("pihole:config", "webpassword"),
+    ] %}
+  {%- if not mapdata | traverse(key ~ ":" ~ secret) %}
+    {#- This has been deprecated and will be removed in v3005 @FIXME -#}
+    {%- do mapdata | update_dict_key_value(key,
+          {
+            secret: salt["grains.get_or_set_hash"](
+                      'archivebox.' ~ key | replace(":", ".") ~ "." ~ secret,
+                      length=64,
+                      chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                    )
+          }
+        )
+    %}
+  {%- endif %}
+{%- endfor %}

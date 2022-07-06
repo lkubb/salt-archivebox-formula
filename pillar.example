@@ -1,0 +1,293 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+# yamllint disable rule:comments-indentation
+---
+archivebox:
+  install:
+      # Install rootless containers running as dedicated user.
+    rootless: true
+      # When applying `clean` states, also remove application data.
+      # Setting this to true might incur accidental data loss!
+    remove_all_data_for_sure: false
+  config:
+    # general:
+    #   output_dir: null
+    #   config_file: null
+    #   only_new: true
+    #   timeout: 60
+    #   media_timeout: 3600
+    #   output_permissions: '644'
+    #   restrict_file_names: windows
+    #   url_blacklist: \.(css|js|otf|ttf|woff|woff2|gstatic\.com|googleapis\.com/css)(\?.*)?$
+    #   url_whitelist: null
+    #   enforce_atomic_writes: true
+    #   tag_separator_pattern: '[,]'
+
+    search_backend:
+      search_backend_host_name: sonic
+      search_backend_password: null
+      # use_indexing_backend: true
+      # use_searching_backend: true
+      # search_backend_engine: ripgrep
+      # search_backend_port: 1491
+      # sonic_collection: archivebox
+      # sonic_bucket: snapshots
+      # search_backend_timeout: 90
+
+    server:
+      bind_addr: 0.0.0.0:4180
+      secret_key: null
+      # allowed_hosts: '*'
+      # debug: false
+      # public_index: true
+      # public_snapshots: true
+      # public_add_view: false
+      # footer_info: >-
+      #   Content is hosted for personal archiving purposes only.  Contact server
+      #   owner for any takedown requests.
+      # snapshots_per_page: 40
+      # custom_templates_dir: null
+      # timezone: UTC
+      # preview_originals: true
+
+    # archive_methods:
+    #   save_title: true
+    #   save_favicon: true
+    #   save_wget: true
+    #   save_wget_requisites: true
+    #   save_singlefile: true
+    #   save_readability: true
+    #   save_mercury: true
+    #   save_pdf: true
+    #   save_screenshot: true
+    #   save_dom: true
+    #   save_headers: true
+    #   save_warc: true
+    #   save_git: true
+    #   save_media: true
+    #   save_archive_dot_org: true
+
+    # archive_method_options:
+    #   resolution: '1440,2000'
+    #   git_domains: 'github.com,bitbucket.org,gitlab.com,gist.github.com'
+    #   check_ssl_validity: true
+    #   media_max_size: 750m
+    #   curl_user_agent: >-
+    #     Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML,
+    #     like Gecko) Chrome/102.0.0.0 Safari/605.1.15 ArchiveBox/{VERSION}
+    #     (+https://github.com/ArchiveBox/ArchiveBox/) curl/{CURL_VERSION}
+    #   wget_user_agent: >-
+    #     Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML,
+    #     like Gecko) Chrome/102.0.0.0 Safari/605.1.15 ArchiveBox/{VERSION}
+    #     (+https://github.com/ArchiveBox/ArchiveBox/) wget/{WGET_VERSION}
+    #   chrome_user_agent: >-
+    #     Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML,
+    #     like Gecko) Chrome/102.0.0.0 Safari/605.1.15 ArchiveBox/{VERSION}
+    #     (+https://github.com/ArchiveBox/ArchiveBox/)
+    #   cookies_file: null
+    #   chrome_user_data_dir: null
+    #   chrome_headless: true
+    #   chrome_sandbox: false
+    #   youtubedl_args:
+    #     - '--write-description'
+    #     - '--write-info-json'
+    #     - '--write-annotations'
+    #     - '--write-thumbnail'
+    #     - '--no-call-home'
+    #     - '--write-sub'
+    #     - '--all-subs'
+    #     - '--write-auto-sub'
+    #     - '--convert-subs=srt'
+    #     - '--yes-playlist'
+    #     - '--continue'
+    #     - '--ignore-errors'
+    #     - '--no-abort-on-error'
+    #     - '--geo-bypass'
+    #     - '--add-metadata'
+    #     - '--max-filesize=750m'
+    #   wget_args:
+    #     - '--no-verbose'
+    #     - '--adjust-extension'
+    #     - '--convert-links'
+    #     - '--force-directories'
+    #     - '--backup-converted'
+    #     - '--span-hosts'
+    #     - '--no-parent'
+    #     - '-e'
+    #     - robots=off
+    #   curl_args:
+    #     - '--silent'
+    #     - '--location'
+    #     - '--compressed'
+    #   git_args:
+    #     - '--recursive'
+
+    # dependencies:
+    #   use_curl: true
+    #   use_wget: true
+    #   use_singlefile: true
+    #   use_readability: true
+    #   use_mercury: true
+    #   use_git: true
+    #   use_chrome: true
+    #   use_node: true
+    #   use_youtubedl: true
+    #   use_ripgrep: true
+    #   curl_binary: curl
+    #   git_binary: git
+    #   wget_binary: wget
+    #   singlefile_binary: /node/node_modules/.bin/single-file
+    #   readability_binary: /node/node_modules/.bin/readability-extractor
+    #   mercury_binary: /node/node_modules/.bin/mercury-parser
+    #   youtubedl_binary: yt-dlp
+    #   node_binary: node
+    #   ripgrep_binary: rg
+    #   chrome_binary: /usr/bin/chromium-browser
+    #   pocket_consumer_key: null
+    #   pocket_access_tokens: {}
+  pihole:
+    config:
+        # Password for the Pihole Web UI. Will be autogenerated
+        # if undefined.
+      webpassword: null
+    enable: false
+      # Port on host to map to Pihole Web UI.
+    webui_port: 1073
+  pywb:
+    enable: false
+  sonic:
+      # This configuration is taken from the official example at
+      # https://github.com/ArchiveBox/ArchiveBox/blob/03eb7e58758d8dcb85ed781e713fc083f8292264/etc/sonic.cfg
+      # You should not need to modify it.
+    config:
+      channel:
+        auth_password: ${env.SEARCH_BACKEND_PASSWORD}
+        inet: 0.0.0.0:1491
+        search:
+          query_alternates_try: 10
+          query_limit_default: 65535
+          query_limit_maximum: 65535
+          suggest_limit_default: 5
+          suggest_limit_maximum: 20
+        tcp_timeout: 300
+      server:
+        log_level: warn
+      store:
+        fst:
+          graph:
+            consolidate_after: 180
+            max_size: 2048
+            max_words: 250000
+          path: /var/lib/sonic/store/fst/
+          pool:
+            inactive_after: 300
+        kv:
+          database:
+            compress: true
+            flush_after: 900
+            max_compactions: 1
+            max_files: 100
+            max_flushes: 1
+            parallelism: 2
+            write_ahead_log: true
+            write_buffer: 16384
+          path: /var/lib/sonic/store/kv/
+          pool:
+            inactive_after: 1800
+          retain_word_objects: 100000
+    enable: true
+
+    # When using Pihole to block ads, wget extractor gets stuck trying to resolve
+    # IPv6 addresses for blocked hosts. This can be fixed in several ways,
+    # this one just disables ipv6 for the Archivebox container completely.
+    # A less intrusive way is to add --ipv4-only to WGET_ARGS.
+    # see https://github.com/ArchiveBox/ArchiveBox/issues/865
+  wget_dns_fix_disable_ipv6: false
+
+  lookup:
+    rootgroup: root
+    compose:
+      create_pod: null
+      pod_args: null
+      project_name: archivebox
+      remove_orphans: true
+      service:
+        container_prefix: null
+        ephemeral: true
+        pod_prefix: null
+        restart_policy: on-failure
+        separator: null
+        stop_timeout: null
+    paths:
+      base: /opt/containers/archivebox
+      compose: docker-compose.yml
+      config_archivebox: archivebox.env
+      config_sonic: sonic.env
+      config_pihole: pihole.env
+      config_pywb: pywb.env
+      data: data
+      data_archive: archive
+      data_dnsmasq: dnsmasq
+      data_pihole: pihole
+      data_pywb: pywb
+      data_sonic: sonic
+      sonic_cfg: sonic.cfg
+    user:
+      groups: []
+      home: null
+      name: archivebox
+      shell: /usr/sbin/nologin
+      uid: null
+    containers:
+      archivebox:
+        image: docker.io/archivebox/archivebox:master
+      pihole:
+        image: docker.io/pihole/pihole:latest
+      pywb:
+        image: docker.io/webrecorder/pywb:latest
+      sonic:
+        image: docker.io/valeriansaliou/sonic:v1.3.1
+
+  tofs:
+      # The files_switch key serves as a selector for alternative
+      # directories under the formula files directory. See TOFS pattern
+      # doc for more info.
+      # Note: Any value not evaluated by `config.get` will be used literally.
+      # This can be used to set custom paths, as many levels deep as required.
+    files_switch:
+      - any/path/can/be/used/here
+      - id
+      - roles
+      - osfinger
+      - os
+      - os_family
+
+      # All aspects of path/file resolution are customisable using the options below.
+      # This is unnecessary in most cases; there are sensible defaults.
+      # Default path: salt://< path_prefix >/< dirs.files >/< dirs.default >
+      # I.e.: salt://archivebox/files/default
+      # path_prefix: template_alt
+      # dirs:
+      #   files: files_alt
+      #   default: default_alt
+      # The entries under `source_files` are prepended to the default source files
+      # given for the state
+    source_files:
+      ArchiveBox compose file is managed:
+        - docker-compose_alt.yml
+        - docker-compose_alt.yml.j2
+      archivebox environment file is managed:
+        - archivebox_alt.env
+        - archivebox_alt.env.j2
+      sonic environment file is managed:
+        - sonic_alt.env
+        - sonic_alt.env.j2
+      pihole environment file is managed:
+        - pihole_alt.env
+        - pihole_alt.env.j2
+      pywb environment file is managed:
+        - pywb_alt.env
+        - pywb_alt.env.j2
+      Sonic config file is managed:
+        - sonic_alt.cfg
+        - sonic_alt.cfg.j2

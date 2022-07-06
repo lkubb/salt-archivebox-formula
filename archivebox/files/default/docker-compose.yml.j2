@@ -1,0 +1,121 @@
+# Usage:
+#     docker-compose run archivebox init --setup
+#     docker-compose up
+#     echo "https://example.com" | docker-compose run archivebox archivebox add
+#     docker-compose run archivebox add --depth=1 https://example.com/some/feed.rss
+#     docker-compose run archivebox config --set PUBLIC_INDEX=True
+#     docker-compose run archivebox help
+# Documentation:
+#     https://github.com/ArchiveBox/ArchiveBox/wiki/Docker#docker-compose
+
+version: '2.4'   # '3.9' or greater also works
+
+services:
+  archivebox:
+    image: {{ archivebox.lookup.containers.archivebox.image }}
+    # command: server --quick-init 0.0.0.0:8000
+    ports:
+      - {{ archivebox.config.server.bind_addr.split(":") | last | int }}:8000
+    env_file:
+      - archivebox.env
+{%- if archivebox.pihole.enable %}
+    dns:
+      - pihole
+{%- endif %}
+{%- if archivebox.wget_dns_fix_disable_ipv6 %}
+    dns_opt:
+      - single-request
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: 1
+      net.ipv6.conf.default.disable_ipv6: 1
+      net.ipv6.conf.lo.disable_ipv6: 1
+{%- endif %}
+    volumes:
+      - {{ archivebox.lookup.paths.data }}:/data
+{%- if archivebox.lookup.paths.data_archive != archivebox.lookup.paths.data | path_join("archive") %}
+      - {{ archivebox.lookup.paths.data_archive }}:/data/archive
+{%- endif %}
+
+{%- if archivebox.sonic.enable %}
+
+    # To run the Sonic full-text search backend, first download the config file to sonic.cfg
+    # curl -O https://raw.githubusercontent.com/ArchiveBox/ArchiveBox/master/etc/sonic.cfg
+    # after starting, backfill any existing Snapshots into the index: docker-compose run archivebox update --index-only
+
+  sonic:
+    image: {{ archivebox.lookup.containers.sonic.image }}
+    expose:
+      - 1491
+    env_file:
+      - sonic.env
+    volumes:
+      - {{ archivebox.lookup.paths.sonic_cfg }}:/etc/sonic.cfg:ro
+      - {{ archivebox.lookup.paths.data_sonic }}:/var/lib/sonic/store
+{%- endif %}
+
+{%- if archivebox.pihole.enable %}
+
+  pihole:
+    image: {{ archivebox.lookup.containers.pihole.image }}
+    env_file:
+      - pihole.env
+    ports:
+      - {{ archivebox.pihole.webui_port }}:80
+    volumes:
+      - {{ archivebox.lookup.paths.data_pihole }}:/etc/pihole
+      - {{ archivebox.lookup.paths.data_dnsmasq }}:/etc/dnsmasq.d
+{%- endif %}
+
+{%- if archivebox.pywb.enable %}
+
+  pywb:
+    image: {{ archivebox.lookup.containers.pywb.image }}
+    entrypoint: /bin/sh -c '(wb-manager init default || test $$? -eq 2) && wb-manager add default /archivebox/archive/*/warc/*.warc.gz; wayback;'
+    env_file:
+      - pywb.env
+    ports:
+      - 8080:8080
+    volumes:
+      - {{ archivebox.lookup.paths.data }}:/archivebox
+      - {{ archivebox.lookup.paths.data_pywb }}:/webarchive
+{%- endif %}
+
+    ### Example: Run scheduled imports in a docker instead of using cron on the
+    #     host machine, add tasks and see more info with archivebox schedule --help
+
+    # scheduler:
+    #    image: archivebox/archivebox:latest
+    #    command: schedule --foreground --every=day --depth=1 'https://getpocket.com/users/USERNAME/feed/all'
+    #    environment:
+    #        - USE_COLOR=True
+    #        - SHOW_PROGRESS=False
+    #    volumes:
+    #        - ./data:/data
+
+
+    ### Example: Put Nginx in front of the ArchiveBox server for SSL termination
+
+    # nginx:
+    #     image: nginx:alpine
+    #     ports:
+    #         - 443:443
+    #         - 80:80
+    #     volumes:
+    #         - ./etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+    #         - ./data:/var/www
+
+
+    ### Example: run all your ArchiveBox traffic through a WireGuard VPN tunnel
+
+    # wireguard:
+    #   image: linuxserver/wireguard
+    #   network_mode: 'service:archivebox'
+    #   cap_add:
+    #     - NET_ADMIN
+    #     - SYS_MODULE
+    #   sysctls:
+    #     - net.ipv4.conf.all.rp_filter=2
+    #     - net.ipv4.conf.all.src_valid_mark=1
+    #   volumes:
+    #     - /lib/modules:/lib/modules
+    #     - ./wireguard.conf:/config/wg0.conf:ro
