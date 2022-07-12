@@ -11,17 +11,40 @@ archivebox:
     remove_all_data_for_sure: false
   config:
     # general:
-    #   output_dir: null
-    #   config_file: null
+          # Toggle whether or not to attempt rechecking old links when adding new ones,
+          # or leave old incomplete links alone and only archive the new links.
+          # By default, ArchiveBox will only archive new links on each import. If you
+          # want it to go back through all links in the index and download any missing
+          # files on every run, set this to False. Regardless of how this is set,
+          # ArchiveBox will never re-download sites that have already succeeded
+          # previously. When this is False it only attempts to fix previous pages have
+          # missing archive extractor outputs, it does not re-archive pages that have
+          # already been successfully archived.
     #   only_new: true
+          # Maximum allowed download time per archive method for each link in seconds.
     #   timeout: 60
+          # Maximum allowed download time for fetching media when SAVE_MEDIA=True [in s]
     #   media_timeout: 3600
+          # Permissions to set the output directory and file contents to.
     #   output_permissions: '644'
-    #   restrict_file_names: windows
+          # A regex expression used to exclude certain URLs from archiving.
+          # All assets required to render each page are still archived.
     #   url_blacklist: \.(css|js|otf|ttf|woff|woff2|gstatic\.com|googleapis\.com/css)(\?.*)?$
+          # A regex expression used to exclude all URLs that don't match the given
+          # pattern from archiving. This option is useful for recursive archiving of all
+          # the pages under a given domain or subfolder (crawling/spidering).
     #   url_whitelist: null
+          # Allows disabling forced FSYNC writes (on network drives). If enabled (default),
+          # the main data directory needs to reside on a local drive.
     #   enforce_atomic_writes: true
+          # REGEX that specifies how to split a string of tags into a list.
     #   tag_separator_pattern: '[,]'
+          # This is the root data folder where Archivebox.conf, index.sqlite3 and
+          # archive/* logs/* sources/* reside. You should not set this.
+    #   output_dir: null
+          # Path to the configuration file. You should not set this unless you know
+          # what you are doing.
+    #   config_file: null
 
     search_backend:
       search_backend_host_name: sonic
@@ -39,39 +62,94 @@ archivebox:
       secret_key: null
       # allowed_hosts: '*'
       # debug: false
+          # Allow anon users to view the index.
       # public_index: true
+          # Allow anon users to view snapshots.
       # public_snapshots: true
+          # Allow anon users to add snapshots.
       # public_add_view: false
+          # Some text to display in the footer of the archive index.
       # footer_info: >-
       #   Content is hosted for personal archiving purposes only.  Contact server
       #   owner for any takedown requests.
+          # Maximum number of Snapshots to show per page on Snapshot list pages.
       # snapshots_per_page: 40
+          # Path to a directory containing custom html/css/images for overriding
+          # the default UI styling
       # custom_templates_dir: null
       # timezone: UTC
+          # Toggle iframe previews of the original URLs.
+          # Snapshot index pages are static html, so you'll have to trigger them
+          # to be rerendered manually to update them, either by clicking Pull Title,
+          # Pull, or running archivebox update on them.
       # preview_originals: true
 
     # archive_methods:
+          # By default ArchiveBox uses the title provided by the import file, but
+          # not all types of imports provide titles (e.g. Plain texts lists of URLs).
+          # When this is True, ArchiveBox downloads the page (and follows all
+          # redirects), then it attempts to parse the link's title from the first
+          # <title></title> tag found in the response.
     #   save_title: true
+          # Fetch and save favicon for the URL from Google's public favicon service.
     #   save_favicon: true
+          # Fetch page with wget, and save responses into folders for each domain.
     #   save_wget: true
-    #   save_wget_requisites: true
+          # Fetch an HTML file with all assets embedded using Single File.
+          # (https://github.com/gildas-lormeau/SingleFile)
     #   save_singlefile: true
+          # Extract article text, summary, and byline using Mozilla's Readability
+          # library. Unlike the other methods, this does not download any additional
+          # files, so it's practically free from a disk usage perspective.
     #   save_readability: true
+          # Extract article text, summary, and byline using the Mercury library.
+          # Unlike the other methods, this does not download any additional files,
+          # so it's practically free from a disk usage perspective.
     #   save_mercury: true
+          # Print page as PDF.
     #   save_pdf: true
+          # Fetch a screenshot of the page.
     #   save_screenshot: true
+          # Fetch a DOM dump of the page.
     #   save_dom: true
     #   save_headers: true
+          # Save a timestamped WARC archive of all the page requests and responses
+          # during the wget archive process.
     #   save_warc: true
+          # Fetch any git repositories on the page.
     #   save_git: true
+          # Fetch all audio, video, annotations, and media metadata on the page
+          # using youtube-dl.
     #   save_media: true
+          # Submit the page's URL to be archived on Archive.org.
     #   save_archive_dot_org: true
 
     # archive_method_options:
+          # Screenshot resolution in pixels width,height.
     #   resolution: '1440,2000'
+          # Domains to attempt download of git repositories on using git clone.
     #   git_domains: 'github.com,bitbucket.org,gitlab.com,gist.github.com'
+          # Whether to enforce HTTPS certificate and HSTS chain of trust when archiving
+          # sites. Set this to False if you want to archive pages even if they have
+          # expired or invalid certificates.  Be aware that when False you cannot
+          # guarantee that you have not been man-in-the-middle'd while archiving
+          # content, so it cannot be verified to be what's on the original site.
     #   check_ssl_validity: true
+          # Fetch images/css/js with wget. (This should be true in most cases.)
+          # [dev note: This is actually found in archive_methods,
+          # but sections don't matter to ArchiveBox.]
+    #   save_wget_requisites: true
+          # This is a wget CLI option:
+          # Change which characters found in remote URLs must be escaped during generation
+          # of local filenames.  Characters that are restricted by this option are escaped,
+          # i.e. replaced with %HH, where HH is the hexadecimal number that corresponds to
+          # the restricted character.
+          # [dev note: This is actually found in general]
+    #   restrict_file_names: windows
     #   media_max_size: 750m
+          # This is the user agent to use during curl/wget archiving. You can set this to
+          # impersonate a more common browser like Chrome or Firefox if you're getting
+          # blocked by servers for having an unknown/blacklisted user agent.
     #   curl_user_agent: >-
     #     Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML,
     #     like Gecko) Chrome/102.0.0.0 Safari/605.1.15 ArchiveBox/{VERSION}
@@ -80,13 +158,34 @@ archivebox:
     #     Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML,
     #     like Gecko) Chrome/102.0.0.0 Safari/605.1.15 ArchiveBox/{VERSION}
     #     (+https://github.com/ArchiveBox/ArchiveBox/) wget/{WGET_VERSION}
+          #  If you're experiencing being blocked by many sites, you can set this to
+          # hide the Headless string that reveals to servers that you're using a
+          # headless browser.
     #   chrome_user_agent: >-
     #     Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML,
     #     like Gecko) Chrome/102.0.0.0 Safari/605.1.15 ArchiveBox/{VERSION}
     #     (+https://github.com/ArchiveBox/ArchiveBox/)
+          # Cookies file to pass to wget. To capture sites that require a user to be
+          # logged in, you can specify a path to a netscape-format cookies.txt file
+          # for wget to use. You can generate this file by using a browser extension to
+          # export your cookies in this format, or by using wget with --save-cookies.
     #   cookies_file: null
+          # Path to a Chrome user profile directory. To capture sites that require a
+          # user to be logged in, you can specify a path to a chrome user profile
+          # (which loads the cookies needed for the user to be logged in). If you don't
+          # have an existing Chrome profile, create one with
+          # chromium-browser --user-data-dir=/tmp/chrome-profile, and log into the sites
+          # you need. Then set CHROME_USER_DATA_DIR=/tmp/chrome-profile to make
+          # ArchiveBox use that profile.
     #   chrome_user_data_dir: null
+          # Whether or not to use Chrome/Chromium in --headless mode (no browser UI
+          # displayed). When set to False, the full Chrome UI will be launched each time
+          # it's used to archive a page, which greatly slows down the process but allows
+          # you to watch in real-time as it saves each page.
     #   chrome_headless: true
+          # This is a security-critical setting, only set this to False if you're
+          # running ArchiveBox inside a container or VM where it doesn't have access to
+          # the rest of your system.
     #   chrome_sandbox: false
     #   youtubedl_args:
     #     - '--write-description'
@@ -141,10 +240,13 @@ archivebox:
     #   mercury_binary: /node/node_modules/.bin/mercury-parser
     #   youtubedl_binary: yt-dlp
     #   node_binary: node
+          # Optionally switch this to use ripgrep-all for full-text search support
+          # across more filetypes (e.g. PDF).
     #   ripgrep_binary: rg
     #   chrome_binary: /usr/bin/chromium-browser
     #   pocket_consumer_key: null
     #   pocket_access_tokens: {}
+
   pihole:
     config:
         # Password for the Pihole Web UI. Will be autogenerated
@@ -155,7 +257,12 @@ archivebox:
     webui_port: 1073
   pywb:
     enable: false
+
   sonic:
+      # Enable sonic as search backend. If you enable it later, you will need to
+      # backfill existing Snapshots into the index:
+      # docker-compose run archivebox update --index-only
+    enable: true
       # This configuration is taken from the official example at
       # https://github.com/ArchiveBox/ArchiveBox/blob/03eb7e58758d8dcb85ed781e713fc083f8292264/etc/sonic.cfg
       # You should not need to modify it.
@@ -195,7 +302,6 @@ archivebox:
           pool:
             inactive_after: 1800
           retain_word_objects: 100000
-    enable: true
 
     # When using Pihole to block ads, wget extractor gets stuck trying to resolve
     # IPv6 addresses for blocked hosts. This can be fixed in several ways,
