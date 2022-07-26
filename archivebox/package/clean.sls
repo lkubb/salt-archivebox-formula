@@ -33,6 +33,9 @@ ArchiveBox user session is not initialized at boot:
   compose.lingering_managed:
     - name: {{ archivebox.lookup.user.name }}
     - enable: false
+    - onlyif:
+      - fun: user.info
+        name: {{ archivebox.lookup.user.name }}
 
 ArchiveBox user account is absent:
   user.absent:
@@ -40,6 +43,9 @@ ArchiveBox user account is absent:
     - purge: {{ archivebox.install.remove_all_data_for_sure }}
     - require:
       - ArchiveBox is absent
+    - retry:
+        attempts: 5
+        interval: 2
 
 {%- if archivebox.install.remove_all_data_for_sure %}
 

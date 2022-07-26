@@ -17,6 +17,7 @@ archivebox:
         ephemeral: true
         pod_prefix: null
         restart_policy: on-failure
+        restart_sec: 2
         separator: null
         stop_timeout: null
     paths:
@@ -39,6 +40,7 @@ archivebox:
       name: archivebox
       shell: /usr/sbin/nologin
       uid: null
+      gid: null
     containers:
       archivebox:
         image: docker.io/archivebox/archivebox:master

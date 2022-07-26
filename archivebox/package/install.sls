@@ -22,6 +22,8 @@ ArchiveBox user session is initialized at boot:
   compose.lingering_managed:
     - name: {{ archivebox.lookup.user.name }}
     - enable: {{ archivebox.install.rootless }}
+    - require:
+      - user: {{ archivebox.lookup.user.name }}
 
 ArchiveBox paths are present:
   file.directory:
