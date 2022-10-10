@@ -8,6 +8,18 @@
 include:
   - {{ sls_config_clean }}
 
+{%- if archivebox.install.autoupdate_service %}
+
+Podman autoupdate service is disabled for ArchiveBox:
+{%-   if archivebox.install.rootless %}
+  compose.systemd_service_disabled:
+    - user: {{ archivebox.lookup.user.name }}
+{%-   else %}
+  service.disabled:
+{%-   endif %}
+    - name: podman-auto-update.timer
+{%- endif %}
+
 ArchiveBox is absent:
   compose.removed:
     - name: {{ archivebox.lookup.paths.compose }}

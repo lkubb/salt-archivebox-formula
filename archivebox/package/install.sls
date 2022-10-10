@@ -71,3 +71,15 @@ ArchiveBox is installed:
     - require:
       - user: {{ archivebox.lookup.user.name }}
 {%- endif %}
+
+{%- if archivebox.install.autoupdate_service is not none %}
+
+Podman autoupdate service is managed for ArchiveBox:
+{%-   if archivebox.install.rootless %}
+  compose.systemd_service_{{ "enabled" if archivebox.install.autoupdate_service else "disabled" }}:
+    - user: {{ archivebox.lookup.user.name }}
+{%-   else %}
+  service.{{ "enabled" if archivebox.install.autoupdate_service else "disabled" }}:
+{%-   endif %}
+    - name: podman-auto-update.timer
+{%- endif %}

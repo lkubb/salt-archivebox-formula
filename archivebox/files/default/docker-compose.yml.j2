@@ -18,6 +18,10 @@ services:
       - {{ archivebox.config.server.bind_addr.split(":") | last | int }}:8000
     env_file:
       - archivebox.env
+{%- if archivebox.install.autoupdate %}
+    labels:
+      - io.containers.autoupdate=registry
+{%- endif %}
 {%- if archivebox.pihole.enable %}
     dns:
       - pihole
@@ -48,6 +52,10 @@ services:
       - 1491
     env_file:
       - sonic.env
+{%-   if archivebox.install.autoupdate %}
+    labels:
+      - io.containers.autoupdate=registry
+{%-   endif %}
     volumes:
       - {{ archivebox.lookup.paths.sonic_cfg }}:/etc/sonic.cfg:ro
       - {{ archivebox.lookup.paths.data_sonic }}:/var/lib/sonic/store
@@ -75,6 +83,10 @@ services:
       - pywb.env
     ports:
       - 8080:8080
+{%-   if archivebox.install.autoupdate %}
+    labels:
+      - io.containers.autoupdate=registry
+{%-   endif %}
     volumes:
       - {{ archivebox.lookup.paths.data }}:/archivebox
       - {{ archivebox.lookup.paths.data_pywb }}:/webarchive

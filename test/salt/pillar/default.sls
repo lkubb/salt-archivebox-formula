@@ -55,6 +55,8 @@ archivebox:
         image: docker.io/valeriansaliou/sonic:v1.3.1
   install:
     rootless: true
+    autoupdate: true
+    autoupdate_service: false
     remove_all_data_for_sure: false
   config:
     search_backend:
