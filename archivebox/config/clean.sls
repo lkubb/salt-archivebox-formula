@@ -20,5 +20,6 @@ ArchiveBox environment files are absent:
 {%- if archivebox.sonic.enable %}
       - {{ archivebox.lookup.paths.sonic_cfg }}
 {%- endif %}
+      - {{ archivebox.lookup.paths.base | path_join(".saltcache.yml") }}
     - require:
       - sls: {{ sls_service_clean }}
