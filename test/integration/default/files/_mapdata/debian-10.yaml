@@ -2,7 +2,6 @@
 # Debian-10
 ---
 values:
-values:
   added_in_defaults: defaults_value
   added_in_lookup: lookup_value
   added_in_pillar: pillar_value

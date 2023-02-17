@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 # vim: ft=yaml
 # yamllint disable rule:comments-indentation
+# yamllint disable rule:line-length
 ---
 archivebox:
   install:
@@ -40,8 +40,8 @@ archivebox:
           # pattern from archiving. This option is useful for recursive archiving of all
           # the pages under a given domain or subfolder (crawling/spidering).
     #   url_whitelist: null
-          # Allows disabling forced FSYNC writes (on network drives). If enabled (default),
-          # the main data directory needs to reside on a local drive.
+          # Allows disabling forced FSYNC writes (on network drives). If enabled
+          # (default), the main data directory needs to reside on a local drive.
     #   enforce_atomic_writes: true
           # REGEX that specifies how to split a string of tags into a list.
     #   tag_separator_pattern: '[,]'
@@ -146,16 +146,17 @@ archivebox:
           # but sections don't matter to ArchiveBox.]
     #   save_wget_requisites: true
           # This is a wget CLI option:
-          # Change which characters found in remote URLs must be escaped during generation
-          # of local filenames.  Characters that are restricted by this option are escaped,
-          # i.e. replaced with %HH, where HH is the hexadecimal number that corresponds to
-          # the restricted character.
+          # Change which characters found in remote URLs must be escaped during
+          # generation of local filenames.  Characters that are restricted by
+          # this option are escaped, i.e. replaced with %HH, where HH is the
+          # hexadecimal number that corresponds to the restricted character.
           # [dev note: This is actually found in general]
     #   restrict_file_names: windows
     #   media_max_size: 750m
-          # This is the user agent to use during curl/wget archiving. You can set this to
-          # impersonate a more common browser like Chrome or Firefox if you're getting
-          # blocked by servers for having an unknown/blacklisted user agent.
+          # This is the user agent to use during curl/wget archiving. You can set
+          # this to impersonate a more common browser like Chrome or Firefox if
+          # you're getting blocked by servers for having an unknown/blacklisted
+          # user agent.
     #   curl_user_agent: >-
     #     Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML,
     #     like Gecko) Chrome/102.0.0.0 Safari/605.1.15 ArchiveBox/{VERSION}

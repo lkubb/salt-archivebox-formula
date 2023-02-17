@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # vim: ft=sls
 
-{%- set tplroot = tpldir.split('/')[0] %}
+{%- set tplroot = tpldir.split("/")[0] %}
 {%- from tplroot ~ "/map.jinja" import mapdata as archivebox with context %}
 {%- from tplroot ~ "/libtofs.jinja" import files_switch with context %}
 
@@ -25,6 +24,16 @@ ArchiveBox user session is initialized at boot:
     - require:
       - user: {{ archivebox.lookup.user.name }}
 
+ArchiveBox paths are present:
+  file.directory:
+    - names:
+      - {{ archivebox.lookup.paths.base }}
+    - user: {{ archivebox.lookup.user.name }}
+    - group: {{ archivebox.lookup.user.name }}
+    - makedirs: true
+    - require:
+      - user: {{ archivebox.lookup.user.name }}
+
 {%- if archivebox.install.podman_api %}
 
 ArchiveBox podman API is enabled:
@@ -45,8 +54,8 @@ ArchiveBox podman API is available:
 ArchiveBox compose file is managed:
   file.managed:
     - name: {{ archivebox.lookup.paths.compose }}
-    - source: {{ files_switch(['docker-compose.yml', 'docker-compose.yml.j2'],
-                              lookup='ArchiveBox compose file is present'
+    - source: {{ files_switch(["docker-compose.yml", "docker-compose.yml.j2"],
+                              lookup="ArchiveBox compose file is present"
                  )
               }}
     - mode: '0644'

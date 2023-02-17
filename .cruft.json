@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/lkubb/salt-template-formula-compose",
-  "commit": "0cf1e418d51569a10d8a30f8b75dfc9bd89dcbc1",
+  "commit": "97cd1b30d1525efd53961d1b7f365dbccb69d37e",
   "checkout": null,
   "context": {
     "cookiecutter": {
