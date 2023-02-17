@@ -41,6 +41,25 @@ ArchiveBox compose file is absent:
     - require:
       - ArchiveBox is absent
 
+{%- if archivebox.install.podman_api %}
+
+ArchiveBox podman API is unavailable:
+  compose.systemd_service_dead:
+    - name: podman
+    - user: {{ archivebox.lookup.user.name }}
+    - onlyif:
+      - fun: user.info
+        name: {{ archivebox.lookup.user.name }}
+
+ArchiveBox podman API is disabled:
+  compose.systemd_service_disabled:
+    - name: podman
+    - user: {{ archivebox.lookup.user.name }}
+    - onlyif:
+      - fun: user.info
+        name: {{ archivebox.lookup.user.name }}
+{%- endif %}
+
 ArchiveBox user session is not initialized at boot:
   compose.lingering_managed:
     - name: {{ archivebox.lookup.user.name }}

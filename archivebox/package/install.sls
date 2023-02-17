@@ -25,15 +25,22 @@ ArchiveBox user session is initialized at boot:
     - require:
       - user: {{ archivebox.lookup.user.name }}
 
-ArchiveBox paths are present:
-  file.directory:
-    - names:
-      - {{ archivebox.lookup.paths.base }}
+{%- if archivebox.install.podman_api %}
+
+ArchiveBox podman API is enabled:
+  compose.systemd_service_enabled:
+    - name: podman
     - user: {{ archivebox.lookup.user.name }}
-    - group: {{ archivebox.lookup.user.name }}
-    - makedirs: true
     - require:
-      - user: {{ archivebox.lookup.user.name }}
+      - ArchiveBox user session is initialized at boot
+
+ArchiveBox podman API is available:
+  compose.systemd_service_running:
+    - name: podman
+    - user: {{ archivebox.lookup.user.name }}
+    - require:
+      - ArchiveBox user session is initialized at boot
+{%- endif %}
 
 ArchiveBox compose file is managed:
   file.managed:

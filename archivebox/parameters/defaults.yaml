@@ -57,6 +57,7 @@ values:
     autoupdate: true
     autoupdate_service: false
     remove_all_data_for_sure: false
+    podman_api: true
   config:
     search_backend:
       search_backend_host_name: sonic
