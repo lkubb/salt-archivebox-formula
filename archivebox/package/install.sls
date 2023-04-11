@@ -38,14 +38,14 @@ ArchiveBox paths are present:
 
 ArchiveBox podman API is enabled:
   compose.systemd_service_enabled:
-    - name: podman
+    - name: podman.socket
     - user: {{ archivebox.lookup.user.name }}
     - require:
       - ArchiveBox user session is initialized at boot
 
 ArchiveBox podman API is available:
   compose.systemd_service_running:
-    - name: podman
+    - name: podman.socket
     - user: {{ archivebox.lookup.user.name }}
     - require:
       - ArchiveBox user session is initialized at boot

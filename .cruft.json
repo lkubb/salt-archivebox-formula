@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/lkubb/salt-template-formula-compose",
-  "commit": "97cd1b30d1525efd53961d1b7f365dbccb69d37e",
+  "commit": "d261bbd33723b1b8df5d67d58918868e3d70d76b",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -21,7 +21,7 @@
       "project_name": "archivebox",
       "containers": "archivebox,sonic,pihole,pywb",
       "git_username": "lkubb",
-      "_lookup": {
+      "lookup": {
         "containers": {
           "archivebox": {
             "image": "docker.io/archivebox/archivebox:master"
@@ -46,7 +46,7 @@
           "sonic_cfg": "sonic.cfg"
         }
       },
-      "_settings": {
+      "settings": {
         "config": {
           "search_backend": {
             "search_backend_host_name": "sonic",

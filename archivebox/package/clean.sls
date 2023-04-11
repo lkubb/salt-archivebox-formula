@@ -51,7 +51,7 @@ ArchiveBox compose file is absent:
 
 ArchiveBox podman API is unavailable:
   compose.systemd_service_dead:
-    - name: podman
+    - name: podman.socket
     - user: {{ archivebox.lookup.user.name }}
     - onlyif:
       - fun: user.info
@@ -59,7 +59,7 @@ ArchiveBox podman API is unavailable:
 
 ArchiveBox podman API is disabled:
   compose.systemd_service_disabled:
-    - name: podman
+    - name: podman.socket
     - user: {{ archivebox.lookup.user.name }}
     - onlyif:
       - fun: user.info
