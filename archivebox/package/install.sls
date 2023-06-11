@@ -2,7 +2,7 @@
 
 {%- set tplroot = tpldir.split("/")[0] %}
 {%- from tplroot ~ "/map.jinja" import mapdata as archivebox with context %}
-{%- from tplroot ~ "/libtofs.jinja" import files_switch with context %}
+{%- from tplroot ~ "/libtofsstack.jinja" import files_switch with context %}
 
 ArchiveBox user account is present:
   user.present:
@@ -54,14 +54,16 @@ ArchiveBox podman API is available:
 ArchiveBox compose file is managed:
   file.managed:
     - name: {{ archivebox.lookup.paths.compose }}
-    - source: {{ files_switch(["docker-compose.yml", "docker-compose.yml.j2"],
-                              lookup="ArchiveBox compose file is present"
+    - source: {{ files_switch(
+                    ["docker-compose.yml", "docker-compose.yml.j2"],
+                    config=archivebox,
+                    lookup="ArchiveBox compose file is present",
                  )
               }}
     - mode: '0644'
     - user: root
     - group: {{ archivebox.lookup.rootgroup }}
-    - makedirs: True
+    - makedirs: true
     - template: jinja
     - makedirs: true
     - context:

@@ -1,6 +1,5 @@
 # vim: ft=sls
 
-
 {#-
     Stops the archivebox, sonic, pihole, pywb container services
     and disables them at boot time.
