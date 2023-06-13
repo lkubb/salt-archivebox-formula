@@ -60,14 +60,16 @@ ArchiveBox environment files are managed:
 Sonic config file is managed:
   file.managed:
     - name: {{ archivebox.lookup.paths.sonic_cfg }}
-    - source: {{ files_switch(['sonic.cfg', 'sonic.cfg.j2'],
-                              lookup='Sonic config file is managed',
+    - source: {{ files_switch(
+                    ["sonic.cfg", "sonic.cfg.j2"],
+                    config=archivebox,
+                    lookup="Sonic config file is managed",
                  )
               }}
     - mode: '0644'
     - user: root
     - group: {{ archivebox.lookup.user.name }}
-    - makedirs: True
+    - makedirs: true
     - template: jinja
     - require:
       - user: {{ archivebox.lookup.user.name }}
