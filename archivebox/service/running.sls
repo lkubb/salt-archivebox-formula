@@ -34,3 +34,4 @@ ArchiveBox service is running:
 {%- endif %}
     - watch:
       - ArchiveBox is installed
+      - sls: {{ sls_config_file }}

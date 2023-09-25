@@ -50,7 +50,7 @@ ArchiveBox environment files are managed:
     - template: jinja
     - require:
       - user: {{ archivebox.lookup.user.name }}
-    - watch_in:
+    - require_in:
       - ArchiveBox is installed
     - context:
         archivebox: {{ archivebox | json }}
