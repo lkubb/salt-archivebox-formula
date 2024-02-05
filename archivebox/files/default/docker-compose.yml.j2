@@ -1,3 +1,17 @@
+{%- set data_is_network_mount = salt["cmd.run_stdout"](
+      "df -P '{data}' | ".format(data=archivebox.lookup.paths.data) ~
+      "awk 'BEGIN {e=1} $NF ~ /^\/.+/ { e=0 ; print $1 ; exit } END { exit e }'",
+      python_shell=true
+) -%}
+{%- set data_archive_is_network_mount = false -%}
+{%- if archivebox.lookup.paths.data_archive != archivebox.lookup.paths.data | path_join("archive") %}
+{%-   set data_archive_is_network_mount = salt["cmd.run_stdout"](
+        "df -P '{data}' | ".format(data=archivebox.lookup.paths.data_archive) ~
+          "awk 'BEGIN {e=1} $NF ~ /^\/.+/ { e=0 ; print $1 ; exit } END { exit e }'",
+        python_shell=true
+) -%}
+{%- endif -%}
+
 # Usage:
 #     docker-compose run archivebox init --setup
 #     docker-compose up
@@ -7,7 +21,7 @@
 #     docker-compose run archivebox help
 # Documentation:
 #     https://github.com/ArchiveBox/ArchiveBox/wiki/Docker#docker-compose
-
+---
 version: '2.4'   # '3.9' or greater also works
 
 services:
@@ -35,9 +49,9 @@ services:
       net.ipv6.conf.lo.disable_ipv6: 1
 {%- endif %}
     volumes:
-      - {{ archivebox.lookup.paths.data }}:/data
+      - {{ archivebox.lookup.paths.data }}:/data{%- if not data_is_network_mount %}:z{%- endif %}
 {%- if archivebox.lookup.paths.data_archive != archivebox.lookup.paths.data | path_join("archive") %}
-      - {{ archivebox.lookup.paths.data_archive }}:/data/archive
+      - {{ archivebox.lookup.paths.data_archive }}:/data/archive{%- if not data_archive_is_network_mount %}:z{%- endif %}
 {%- endif %}
 
 {%- if archivebox.sonic.enable %}
@@ -57,8 +71,8 @@ services:
       - io.containers.autoupdate=registry
 {%-   endif %}
     volumes:
-      - {{ archivebox.lookup.paths.sonic_cfg }}:/etc/sonic.cfg:ro
-      - {{ archivebox.lookup.paths.data_sonic }}:/var/lib/sonic/store
+      - {{ archivebox.lookup.paths.sonic_cfg }}:/etc/sonic.cfg:ro,Z
+      - {{ archivebox.lookup.paths.data_sonic }}:/var/lib/sonic/store:Z
 {%- endif %}
 
 {%- if archivebox.pihole.enable %}
@@ -70,8 +84,8 @@ services:
     ports:
       - {{ archivebox.pihole.webui_port }}:80
     volumes:
-      - {{ archivebox.lookup.paths.data_pihole }}:/etc/pihole
-      - {{ archivebox.lookup.paths.data_dnsmasq }}:/etc/dnsmasq.d
+      - {{ archivebox.lookup.paths.data_pihole }}:/etc/pihole:Z
+      - {{ archivebox.lookup.paths.data_dnsmasq }}:/etc/dnsmasq.d:Z
 {%- endif %}
 
 {%- if archivebox.pywb.enable %}
@@ -88,8 +102,8 @@ services:
       - io.containers.autoupdate=registry
 {%-   endif %}
     volumes:
-      - {{ archivebox.lookup.paths.data }}:/archivebox
-      - {{ archivebox.lookup.paths.data_pywb }}:/webarchive
+      - {{ archivebox.lookup.paths.data }}:/archivebox:z
+      - {{ archivebox.lookup.paths.data_pywb }}:/webarchive:z
 {%- endif %}
 
     ### Example: Run scheduled imports in a docker instead of using cron on the

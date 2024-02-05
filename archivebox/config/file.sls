@@ -67,7 +67,7 @@ Sonic config file is managed:
                  )
               }}
     - mode: '0644'
-    - user: root
+    - user: {{ archivebox.lookup.user.name }}
     - group: {{ archivebox.lookup.user.name }}
     - makedirs: true
     - template: jinja
