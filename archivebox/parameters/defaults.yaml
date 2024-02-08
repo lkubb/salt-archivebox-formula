@@ -44,7 +44,7 @@ values:
       gid: null
     containers:
       archivebox:
-        image: docker.io/archivebox/archivebox:master
+        image: docker.io/archivebox/archivebox:latest
       pihole:
         image: docker.io/pihole/pihole:latest
       pywb:
