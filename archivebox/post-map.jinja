@@ -11,7 +11,7 @@
 {%- endif -%}
 {%- for path, val in mapdata.lookup.paths.items() -%}
   {%- if val and val is string and not val.startswith("/") -%}
-    {%- if path.startswith("data_") -%}
+    {%- if path == "data_archive" -%}
       {%- do mapdata.lookup.paths.update({path: data_path | path_join(val)}) -%}
     {%- else -%}
       {%- do mapdata.lookup.paths.update({path: base_path | path_join(val)}) -%}
