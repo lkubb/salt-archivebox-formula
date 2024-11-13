@@ -73,7 +73,7 @@ Create the file ``/etc/salt/master.d/fileserver.conf`` and restart the ``master`
 
 
 Create per DNS configuration for ``archivebox`` formula
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now, we can provides the per DNS domain name configuration files for the ``archivebox`` formulas under ``/srv/salt/archivebox/parameters/``.
 
@@ -104,7 +104,7 @@ We create another configuration for the DNS domain ``example.com`` in the Jinja 
 
 
 Create per role configuration for ``archivebox`` formula
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now, we can provides the per role configuration files for the ``archivebox`` formulas under ``/srv/salt/archivebox/parameters/``.
 
@@ -470,7 +470,7 @@ Use formula configuration values in templates
 
 When you need to process salt templates, you should avoid calling `salt['config.get']`_ (or `salt['pillar.get']`_ and `salt['grains.get']`_) directly from the template. All the needed values should be available within the ``mapdata`` variable exported by ``map.jinja``.
 
-Here is an example based on `template-formula/archivebox/config/file.sls`_:
+Here is an example based on `template-formula/TEMPLATE/config/file.sls`_:
 
 .. code-block:: sls
 
@@ -538,5 +538,5 @@ This ``sls`` file expose a ``archivebox`` context variable to the jinja template
 .. _salt.slsutil.merge: https://docs.saltproject.io/en/latest/ref/modules/all/salt.modules.slsutil.html#salt.modules.slsutil.merge
 .. _traverse: https://docs.saltproject.io/en/latest/topics/jinja/index.html#traverse
 .. _salt-ssh: https://docs.saltproject.io/en/latest/topics/ssh/
-.. _template-formula/archivebox/config/file.sls: https://github.com/saltstack-formulas/template-formula/blob/master/archivebox/config/file.sls
+.. _template-formula/TEMPLATE/config/file.sls: https://github.com/saltstack-formulas/template-formula/blob/master/TEMPLATE/config/file.sls
 .. _bug 58726: https://github.com/saltstack/salt/issues/58726
